@@ -17,6 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 public class SplashPresenter {
     private ISplashView splashView;
     private CommonApi api;
+    private Disposable disposable;
 
     public SplashPresenter(ISplashView splashView) {
         this.splashView = splashView;
@@ -24,13 +25,14 @@ public class SplashPresenter {
     }
 
     public void getLaunchImage(){
+
         api.getLaunchImage()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<LaunchImage>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
@@ -40,7 +42,7 @@ public class SplashPresenter {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        splashView.onRequestError();
                     }
 
                     @Override
