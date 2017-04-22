@@ -1,10 +1,12 @@
-package com.exemple.selfzhihu.mvp.view;
+package com.exemple.selfzhihu.ui.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
@@ -16,6 +18,7 @@ import com.exemple.selfzhihu.App;
 import com.exemple.selfzhihu.R;
 import com.exemple.selfzhihu.bean.LaunchImage;
 import com.exemple.selfzhihu.mvp.presenter.SplashPresenter;
+import com.exemple.selfzhihu.mvp.view.ISplashView;
 import com.exemple.selfzhihu.utils.SharedPreferencesUtils;
 
 import io.reactivex.disposables.Disposable;
@@ -24,12 +27,21 @@ import io.reactivex.disposables.Disposable;
  * Created by Jasper on 2017/4/20.
  */
 
-public class SplashActivity extends AppCompatActivity implements ISplashView{
+public class SplashActivity extends BaseActivity implements ISplashView {
 
     private ImageView launchImage;
     private String imgUrl;
     private SplashPresenter splashPresenter;
     private Disposable disposable;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 666){
+                Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+                startActivity(intent);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,6 +101,8 @@ public class SplashActivity extends AppCompatActivity implements ISplashView{
 
     @Override
     public void onRequestEnd() {
-
+        Message message = new Message();
+        message.what = 666;
+        handler.sendMessageDelayed(message,0);
     }
 }

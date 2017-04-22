@@ -1,7 +1,7 @@
 package com.exemple.selfzhihu.mvp.presenter;
 
-import com.exemple.selfzhihu.api.ApiManger;
-import com.exemple.selfzhihu.api.CommonApi;
+import com.exemple.selfzhihu.api.ApiService;
+import com.exemple.selfzhihu.api.ApiUtil;
 import com.exemple.selfzhihu.bean.LaunchImage;
 import com.exemple.selfzhihu.mvp.view.ISplashView;
 
@@ -16,12 +16,12 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SplashPresenter {
     private ISplashView splashView;
-    private CommonApi api;
+    private ApiService api;
     private Disposable disposable;
 
     public SplashPresenter(ISplashView splashView) {
         this.splashView = splashView;
-        api = ApiManger.getCommonApi();
+        api = ApiUtil.getApiService();
     }
 
     public void getLaunchImage(){
@@ -37,17 +37,18 @@ public class SplashPresenter {
 
                     @Override
                     public void onNext(LaunchImage launchImage) {
-                        splashView.getLaunchImage(launchImage);
+                        splashView.getLaunchImage(launchImage,disposable);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        splashView.onRequestError();
+                        splashView.onRequestError(disposable);
+                        splashView.onRequestEnd();
                     }
 
                     @Override
                     public void onComplete() {
-
+                        splashView.onRequestEnd();
                     }
                 });
     }
